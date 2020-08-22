@@ -11,8 +11,8 @@ import { AccordionModule } from 'primeng/accordion';
 
 import { AppComponent } from './app.component';
 import { DropdownModule } from 'primeng/dropdown';
-import { CarService } from './services/carservice';
 import { ESPNService } from './services/espnservice';
+import { WeatherService } from './services/weatherservice';
 
 @NgModule({
   declarations: [AppComponent],
@@ -28,7 +28,7 @@ import { ESPNService } from './services/espnservice';
     DropdownModule,
     AccordionModule,
   ],
-  providers: [CarService, ESPNService],
+  providers: [WeatherService, ESPNService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

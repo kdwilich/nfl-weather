@@ -13,4 +13,12 @@ export class ESPNService {
       .then((res: any) => res.content.sbData)
       .catch((err) => console.error(err));
   }
+
+  getWeeks() {
+    return this.http
+      .get('assets/data/nfl-weeks.json')
+      .toPromise()
+      .then((res: any) => res)
+      .catch((err) => console.error(err));
+  }
 }

@@ -1,6 +1,6 @@
 <div class="p-grid p-4">
   <section class="p-col-12">
-    <p-dropdown [options]="cities1" [(ngModel)]="selectedCity1"></p-dropdown>
+    <p-dropdown [options]="weeks" [(ngModel)]="selectedWeek" optionalLabel="weekName"></p-dropdown>
   </section>
   <section class="p-col-12 py-4">
     <h1>NFL Schedule</h1>
@@ -14,34 +14,53 @@
       [value]="gamesByDateTime(dateTime)"
       dataKey="id"
     >
-      <ng-template pTemplate="header">
-        <tr align="left">
-          <th [attr.colspan]="gameCols.length">
-            {{ formatDateTime(dateTime) }}
+      <ng-template pTemplate="caption">
+        <tr>
+          <th>
+            {{ formatDateTime(dateTime, 'date') }}
           </th>
-        </tr></ng-template
-      >
-      <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
-        <tr [pSelectableRow]="rowData" [pRowToggler]="rowData">
-          <td *ngFor="let col of columns">
-            {{ rowData[col.field] }}
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-game let-expanded="expanded">
+        <tr [pSelectableRow]="game" [pRowToggler]="game">
+          <td width="120" align="right">
+            {{ formatDateTime(dateTime, 'time') }}
+          </td>
+          <td width="55">
+            {{ game.broadcasts }}
+          </td>
+          <td class="matchup-info">
+            <div class="home team">
+              <div><img src="{{ game.homeTeam.logo }}" /></div>
+              <div class="body0 pr-3 pl-1">{{ game.homeTeam.name }}</div>
+              <div class="body2 record">({{ game.homeTeam.record }})</div>
+            </div>
+            <div class="px-3 body2">
+              AT
+            </div>
+            <div class="away team">
+              <div><img src="{{ game.awayTeam.logo }}" /></div>
+              <div class="body0 pl-3 pr-1">{{ game.awayTeam.name }}</div>
+              <div class="body2 record">({{ game.awayTeam.record }})</div>
+            </div>
+          </td>
+          <td width="90" align="center">
+            <div>{{ game.venue.indoor ? 'INSIDE' : 'OUTSIDE' }}</div>
+          </td>
+          <td width="50" align="center">
+            <div>{{ game.temperature }}</div>
           </td>
         </tr>
       </ng-template>
-      <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
+      <ng-template pTemplate="rowexpansion" let-game>
         <tr>
-          <td [attr.colspan]="columns.length">
+          <td colspan="3">
             <div class="p-grid -fluid" style="font-size: 16px; padding: 20px;">
               <div class="p-col-12 p-md-9">
                 <div class="p-grid">
-                  <div *ngFor="let details of rowData.competitions" class="p-col-12">
-                    <ng-container *ngFor="let teamData of details.competitors">
-                      <h3>
-                        <img width="30" [attr.alt]="teamData.team.name" [attr.src]="teamData.team.logo" />
-                        {{ teamData.team.displayName }}
-                      </h3>
-                    </ng-container>
-                  </div>
+                  <img width="50" [style.background-color]="'#' + game.homeTeam.color" [attr.src]="game.homeTeam.logo" />
+                  <h3>{{ game.name }}</h3>
+                  <img width="50" [style.background-color]="'#' + game.awayTeam.color" [attr.src]="game.awayTeam.logo" />
                 </div>
               </div>
             </div>
@@ -49,43 +68,5 @@
         </tr>
       </ng-template>
     </p-table>
-    <!-- <p-table selectionMode="multiple" [(selection)]="selectedCar" [columns]="cols" [value]="cars" dataKey="vin">
-      <ng-template pTemplate="caption">
-        List of Cars
-      </ng-template>
-      <ng-template pTemplate="header" let-columns>
-        <tr>
-          <th *ngFor="let col of columns">
-            {{ col.header }}
-          </th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-rowData let-expanded="expanded" let-columns="columns">
-        <tr [pSelectableRow]="rowData" [pRowToggler]="rowData">
-          <td *ngFor="let col of columns">
-            {{ rowData[col.field] }}
-          </td>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="rowexpansion" let-rowData let-columns="columns">
-        <tr>
-          <td [attr.colspan]="columns.length">
-            <div class="p-grid -fluid" style="font-size: 16px; padding: 20px;">
-              <div class="p-col-12 p-md-3" style="text-align: center;">
-                <img [attr.alt]="rowData.brand" src="" />
-              </div>
-              <div class="p-col-12 p-md-9">
-                <div class="p-grid">
-                  <div class="p-col-12"><b>Vin:</b> {{ rowData.vin }}</div>
-                  <div class="p-col-12"><b>Year:</b> {{ rowData.year }}</div>
-                  <div class="p-col-12"><b>Brand:</b> {{ rowData.brand }}</div>
-                  <div class="p-col-12"><b>Color:</b> {{ rowData.color }}</div>
-                </div>
-              </div>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table> -->
   </section>
 </div>
