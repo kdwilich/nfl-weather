@@ -52,11 +52,13 @@ export class AppComponent implements OnInit {
   constructor(private weatherService: WeatherService, private readonly espnService: ESPNService) {}
 
   ngOnInit() {
-    this.espnService.getWeeks().then((weeks) => (this.weeks = weeks));
+    // this.espnService.getWeeks().then((weeks) => (this.weeks = weeks));
 
     this.selectedYear = 2019;
     this.selectedWeek = 1;
     this.selectedType = 2;
+
+    // init week func
     this.weekSchedule = [];
     this.gameTimes = [];
 
@@ -83,6 +85,37 @@ export class AppComponent implements OnInit {
       { label: 'Istanbul', value: { id: 4, name: 'Istanbul', code: 'IST' } },
       { label: 'Paris', value: { id: 5, name: 'Paris', code: 'PRS' } },
     ];
+
+    this.weeks = [
+      { label: 'Select Week', value: null },
+      // { label: 'Hall of Fame Weekend', value: -1 },
+      // { label: 'Preseason Week 1', value: -2 },
+      // { label: 'Preseason Week 2', value: -3 },
+      // { label: 'Preseason Week 3', value: -4 },
+      // { label: 'Preseason Week 4', value: -5 },
+      { label: 'Week 1', value: 1 },
+      { label: 'Week 2', value: 2 },
+      { label: 'Week 3', value: 3 },
+      { label: 'Week 4', value: 4 },
+      { label: 'Week 5', value: 5 },
+      { label: 'Week 6', value: 6 },
+      { label: 'Week 7', value: 7 },
+      { label: 'Week 8', value: 8 },
+      { label: 'Week 9', value: 9 },
+      { label: 'Week 10', value: 10 },
+      { label: 'Week 11', value: 11 },
+      { label: 'Week 12', value: 12 },
+      { label: 'Week 13', value: 13 },
+      { label: 'Week 14', value: 14 },
+      { label: 'Week 15', value: 15 },
+      { label: 'Week 16', value: 16 },
+      { label: 'Week 17', value: 17 },
+      { label: 'Wild Card', value: 18 },
+      { label: 'Divisonal Round', value: 19 },
+      { label: 'Conference Championship', value: 20 },
+      { label: 'Superbowl', value: 22 },
+    ];
+     
   }
 
   getGameData(game): GameData {
@@ -115,6 +148,43 @@ export class AppComponent implements OnInit {
 
   gamesByDateTime(time: string) {
     return this.weekSchedule.filter((week) => week.date === time);
+  }
+
+  onChangeWeek(e) {
+    this.selectedWeek = e.value;
+    console.log(this.selectedWeek);
+    this.updateSchedule(this.selectedWeek);
+    return;
+  }
+
+  updateSchedule(w){
+    this.selectedYear = 2019;
+    this.selectedWeek = w;
+    this.selectedType = 2; // 1= pre 2 = REG season 3= Post 4= off
+
+    if(w > 17){
+       var chosenWeek= this.selectedWeek - 17 ;
+       console.log(chosenWeek);
+       this.selectedType=3;
+    }
+    else if(w < 0){
+      var chosenWeek= Math.abs(this.selectedWeek) ;
+      console.log(chosenWeek);
+      this.selectedType=1;
+   }
+     // init week func
+     this.weekSchedule = [];
+     this.gameTimes = [];
+ 
+     this.espnService.getSchedules(chosenWeek, this.selectedYear, this.selectedType).then((week: any) => {
+       const games = week.events;
+       games.forEach((game) => {
+         this.weekSchedule.push(this.getGameData(game));
+         this.gameTimes.indexOf(game.date) === -1 ? this.gameTimes.push(game.date) : null;
+       });
+       // console.log(week.events);
+       // console.log(this.weekSchedule);
+     });
   }
 
   formatDateTime(dateTime: string, type: 'date' | 'time') {

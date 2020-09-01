@@ -1,6 +1,6 @@
 <div class="p-grid p-4">
   <section class="p-col-12">
-    <p-dropdown [options]="weeks" [(ngModel)]="selectedWeek" optionalLabel="weekName"></p-dropdown>
+    <p-dropdown [options]="weeks" (onChange)="onChangeWeek($event)" [(ngModel)]="selectedWeek" optionalLabel="weekName"></p-dropdown>
   </section>
   <section class="p-col-12 py-4">
     <h1>NFL Schedule</h1>
